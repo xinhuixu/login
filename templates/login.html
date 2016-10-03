@@ -3,19 +3,30 @@
 <html>
   
   <head>
+    <title> portal </title>
   </head>
 
   <body>
-    <form action = "/auth/" method = "POST">
+    <form action="/auth/" method="POST">
       <h2>very secretive portal no.001 </h2>
       <br>
       who are you?<br>
-      <input type = "Username" name = "username"> <br>
+      <input type="text" name="username"> <br>
       pass it on<br>
-      <input type = "Password" name = "password"> <br>
+      <input type="password" name="password">
       <br>
-      <input type = "submit">
+      <input type="submit" value="login">
     </form>
+    <h3><i>new fella in town?</i></h3>
+    <form action="/register/" method="POST">
+      tell me all about you <br>
+      <input type="text" name="username"> <br>
+      pass it on <br>
+      <!--TODO: USER VALIDATION-->
+      <input type="password" name="password"> <br>
+      <input type="submit" value="register">
+    </form>
+    
   </body>
 
 </html>
