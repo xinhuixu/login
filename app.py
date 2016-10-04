@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-import hashlib, csv
+import hashlib, csv, os
 
 app = Flask(__name__)
 
@@ -18,26 +18,49 @@ def authenticate():
 def csvToDict(r):
     d = {}
     for row in r:
-        key = row[0]
-        val = row[1]
+        l = row.split(",")
+        if len(l) < 2:
+            return d
+        key = l[0]
+        val = l[1]
         d[key] = val
     return d
         
     
 def check(username, password):
-    r = csv.reader(open("data/usr.csv","r"))
+    r = open("data/usr.csv","r")
     d = csvToDict(r)
+    print d
     if username in d:
-        if d[username] == password:
-            return "you did it. im so proud"
-        else:
-            return "wrong pw. good try"
+        print shhh(password)
+        if d[username] == shhh(password)+"\n":
+            return "you did it "+username+". im so proud"
+        return "wrong pw "+username+". good try"
     else:
-        return "username not found. wyd? #take3sectoregister"
-    
+        return "username "+username+" not found. wyd? #take3sectoregister"
+
+def shhh(password):
+    return hashlib.sha224(password).hexdigest()
+
 @app.route("/register/", methods=["POST"])
 def register():
-    return "0"
+    username = request.form["username"]
+    password = request.form["password"]
+    
+    password = shhh(password)
+
+    r = open("data/usr.csv","r")
+    d = csvToDict(r)
+    w = open("data/usr.csv","a")
+    
+    if username in d:
+        return "looks like "+username+" aint no new fella in town!"        
+    else:
+        w.write(username+","+password+"\n")
+        return "got it "+username+" ;)"
+    w.close()
+    r.close()
+    
     
 if __name__ == '__main__':
     app.debug = True
