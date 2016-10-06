@@ -1,9 +1,10 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 import hashlib, csv, os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(15)
 
-@app.route("/")
+@app.route("/login/")
 def login():    
     return render_template('login.html')
 
