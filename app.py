@@ -1,12 +1,24 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, redirect, request, render_template, session, url_for
 import hashlib, csv, os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(15)
 
+@app.route("/")
+def root():
+    if 'username' in session:
+        username = session['username']
+        return 'logged in as ' + username + '<br>'
+    return redirect(url_for('login'))
+
+    
 @app.route("/login/")
 def login():    
     return render_template('login.html')
+
+@app.route("/logout/")
+def logout():
+    session.pop('username')
 
 @app.route("/auth/", methods=["POST"])
 def authenticate():
