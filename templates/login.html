@@ -3,6 +3,10 @@
 <html>
   
   <head>
+    <style>
+      body {text-align:center;}
+
+    </style>
     <title> portal </title>
   </head>
 
@@ -10,14 +14,13 @@
     <form action="/auth/" method="POST">
       <h2>very secretive portal no.001 </h2>
       <h3><i>{{res}}</i></h3>
-      <br>
       who are you?<br>
       <input type="text" name="username"> <br>
       pass it on<br>
       <input type="password" name="password">
-      <br>
-      <input type="submit" name="action" value="login">
-      <input type="submit" name="action" value="register">
+      <br><br>
+      <input type="submit" name="action" value="login" style="background-color:#A5D6A7;">
+      <input type="submit" name="action" value="register" style="background-color:#ffffff;">
     </form>
     
   </body>

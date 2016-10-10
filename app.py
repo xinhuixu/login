@@ -9,25 +9,43 @@ app.secret_key = 'chogiwa'
 def root():    
     if 'username' in session:
         username = session['username']
-        return 'logged in as ' + username + '<br>'
+        print '!SESSION_STATUS: ' + username
+        return redirect(url_for('welcome'))
     return redirect(url_for('login'))
+
+@app.route("/welcome/", methods=["POST","GET"])
+def welcome():
+    form = request.form
+    if 'logout' in form:
+        logout()
+        return render_template("login.html",res="logged out. i don't miss you")
+    return render_template("welcome.html", username = session['username'])
 
 @app.route("/login/") # + register
 def login():
     return render_template('login.html')
 
-@app.route("/logout/")
 def logout():
-    session.pop('username')
-
+    try:
+        session.pop('username')
+    except:
+        "something, probably involving logout, is wrong"
+    print '!SESSION_STATUS: LOGGED OUT'
+                 
 @app.route("/auth/", methods=["POST"])
 def authenticate():
     form = request.form
     action = form['action']
+    username = form['username']
+    password = form['password']
     if action == 'login':
-        return render_template('login.html',res=login(form["username"],form["password"]))
+        res = login(username,password)
+        if res == "success":
+            session["username"] = username
+            return render_template("welcome.html", username=username)
+        return render_template('login.html',res=res)
     elif action == 'register':
-        return render_template('login.html',res=register(form["username"],form["password"]))
+        return render_template('login.html',res=register(username,password))
     return 'error: unknown action'
     
 def csvToDict(r):
@@ -48,7 +66,7 @@ def login(username, password):
     res = ""
     if username in d:
         if d[username] == shhh(password)+"\n":
-            res = "you did it "+username+". you just...logged in...you did that.."
+            res = "success"
         else:
             res = "wrong pw "+username+". good try"        
     else:
@@ -64,6 +82,7 @@ def register(username, password):
     res = ""
     r = open("data/usr.csv","r")
     d = csvToDict(r)
+    print "d:",d
     w = open("data/usr.csv","a")    
     if username in d:
         res = "looks like "+username+" is already registered lol check again?"        
